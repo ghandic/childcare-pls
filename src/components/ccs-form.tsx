@@ -66,7 +66,7 @@ const WhatIfAnalysisForm = ({
   useEffect(() => {
     Object.entries(defaultValues).forEach(([name, value]) => {
       // @ts-expect-error allow
-      form.setFieldValue(name, value);
+      form.setFieldValue(name, value, { dontUpdateMeta: true });
     });
   }, [defaultValues, form]);
   return (
@@ -253,23 +253,21 @@ const NannyingDetails = ({
       <div>
         <form.Field
           name="nannyingRate"
-          validators={{
-            onChange: ({ value }) =>
-              value < 0 ? "Nannying Rate is required" : undefined,
-          }}
+          // validators={{
+          //   onChange: ({ value }) =>
+          //     value < 0 ? "Nannying Rate is required" : undefined,
+          // }}
           children={(field) => (
             <>
               <Label htmlFor={field.name}>Nannying Rate</Label>
               <CurrencyInput
                 id={field.name}
                 value={field.state.value}
-                onBlur={field.handleBlur}
-                onNumberChange={(n) => {
-                  field.handleChange(n);
+                onValueChange={(value) => {
+                  field.handleChange(value ? parseFloat(value) : 0);
                 }}
                 className="w-full"
               />
-              <FieldInfo field={field} />
             </>
           )}
         />
@@ -296,7 +294,6 @@ const NannyingDetails = ({
                   <SelectItem value="2">2</SelectItem>
                 </SelectContent>
               </Select>
-              <FieldInfo field={field} />
             </>
           )}
         />
@@ -328,9 +325,8 @@ const FamilyDetails = ({
               <CurrencyInput
                 id={field.name}
                 value={field.state.value}
-                onBlur={field.handleBlur}
-                onNumberChange={(n) => {
-                  field.handleChange(n);
+                onValueChange={(value) => {
+                  field.handleChange(value ? parseFloat(value) : 0);
                 }}
                 className="w-full"
               />
@@ -510,9 +506,10 @@ const Person1Section = ({
               <CurrencyInput
                 id={field.name}
                 value={field.state.value}
-                onBlur={field.handleBlur}
-                onNumberChange={(n) => {
-                  field.handleChange(n);
+                onValueChange={(value) => {
+                  console.log("value", value);
+                  if (value?.endsWith(".")) return parseFloat(value) + 0.01;
+                  field.handleChange(value ? parseFloat(value) : 0);
                 }}
                 className="w-full"
               />
@@ -678,9 +675,8 @@ const Person2Section = ({
               <CurrencyInput
                 id={field.name}
                 value={field.state.value}
-                onBlur={field.handleBlur}
-                onNumberChange={(n) => {
-                  field.handleChange(n);
+                onValueChange={(value) => {
+                  field.handleChange(value ? parseFloat(value) : 0);
                 }}
                 className="w-full"
               />
