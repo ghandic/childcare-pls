@@ -7,7 +7,8 @@ import {
   useSavedSearch,
 } from "@/components/saved-search-provider";
 import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
+import { ChevronLeft, Search, Trash } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const defaultValuesSchema = z.object({
   income1: z.number().default(92000),
@@ -44,14 +45,25 @@ export const Route = createFileRoute("/")({
   component: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const defaultValues = Route.useSearch();
-
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [open, setOpen] = useState(false);
     return (
       <SavedSearchProvider>
         <div className="flex flex-row w-full min-h-[100vh]">
-          <div className="w-[250px] bg-muted fixed h-[100vh]">
-            <SavedSearches />
+          <div
+            className={cn(
+              "bg-muted fixed h-[100vh]",
+              open ? "w-[250px] " : "w-[50px] "
+            )}
+          >
+            <SavedSearches open={open} onOpenChange={setOpen} />
           </div>
-          <div className="w-full pl-[250px] flex flex-col gap-4 p-4">
+          <div
+            className={cn(
+              "w-full flex flex-col gap-4 p-4",
+              open ? "pl-[250px]" : "pl-[50px]"
+            )}
+          >
             <h1 className="font-bold text-3xl text-center">
               What should we do for childcare!?
             </h1>
@@ -63,15 +75,64 @@ export const Route = createFileRoute("/")({
   },
 });
 
-const SavedSearches = () => {
+const SavedSearches = ({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) => {
   // pull saved names and state from localstorage
   const { savedSearches, deleteSearch } = useSavedSearch();
   const navigate = useNavigate();
   const [currentlyViewed, setCurrentlyViewed] = useState<string>();
 
+  if (!open) {
+    return (
+      <div>
+        <Button
+          size="icon"
+          variant="outline"
+          className="h-8 w-8 absolute top-4 right-[10px] "
+          onClick={() => onOpenChange(true)}
+        >
+          <Search className="h-4 w-4" />
+        </Button>
+        <div className="flex flex-col gap-2 mt-16 items-center">
+          {savedSearches.map((search, index) => (
+            <Button
+              variant={currentlyViewed === search.id ? "default" : "outline"}
+              key={index}
+              className="h-8 w-8"
+              onClick={() => {
+                setCurrentlyViewed(search.id);
+                navigate({
+                  search: () => search.values,
+                });
+              }}
+            >
+              {index + 1}
+            </Button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4">
       <h1 className="font-bold text-xl text-center">Saved Searches</h1>
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={() => {
+          onOpenChange(false);
+        }}
+        className="absolute top-4 right-3 h-8 w-8"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
+
       <div className="flex flex-col gap-2 pt-4">
         {savedSearches.map((search, index) => (
           <div className="flex flex-row gap-2">

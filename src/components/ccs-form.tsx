@@ -77,13 +77,13 @@ const WhatIfAnalysisForm = ({
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className=" flex flex-col gap-4"
+        className="flex flex-col gap-4"
       >
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:gap-4">
           <Person1Section form={form} />
           <Person2Section form={form} />
         </div>
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:gap-4">
           <FamilyDetails form={form} />
           {formState.daysNannyingPerWeek1 + formState.daysNannyingPerWeek2 >
             0 && <NannyingDetails form={form} />}
@@ -468,7 +468,7 @@ const CollapsibleCard = ({
   };
 
   return (
-    <Card className={cn("w-full h-", isOpen ? "" : "h-24")}>
+    <Card className={cn("w-full", isOpen ? "" : "h-24")}>
       <CardHeader>
         <div className="flex flex-row justify-between">
           <div>
