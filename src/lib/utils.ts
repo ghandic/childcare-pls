@@ -421,18 +421,20 @@ export function calculateTotalTakeHomePayWithChildcare({
   console.log("incomeAdjusted1", incomeAdjusted1);
   console.log("incomeAdjusted2", incomeAdjusted1);
 
-  const nannyingIncome1 = calculateNannyingIncome(
-    nannyingRate,
-    numberOfChildrenToNanny,
-    daysNannyingPerWeek1
-  );
+  const nannyingIncome1 =
+    calculateNannyingIncome(
+      nannyingRate,
+      numberOfChildrenToNanny,
+      daysNannyingPerWeek1
+    ) * 52;
   console.log("nannyingIncome1", nannyingIncome1);
 
-  const nannyingIncome2 = calculateNannyingIncome(
-    nannyingRate,
-    numberOfChildrenToNanny,
-    daysNannyingPerWeek2
-  );
+  const nannyingIncome2 =
+    calculateNannyingIncome(
+      nannyingRate,
+      numberOfChildrenToNanny,
+      daysNannyingPerWeek2
+    ) * 52;
   console.log("nannyingIncome2", nannyingIncome2);
 
   const totalIncome1 = incomeAdjusted1 + nannyingIncome1;
@@ -496,17 +498,17 @@ export function calculateTotalTakeHomePayWithChildcare({
   }
   if (daysNannyingPerWeek1 > 0) {
     explanation.push(
-      `<strong>Nannying Income for Person 1:</strong> discountedNannyRate(${asAU(discountedNannyRate)}) * daysNannyingPerWeek(${daysNannyingPerWeek1}) * nannyHoursPerDay(${assumedNannyHoursPerDay}) = ${asAU(nannyingIncome1)}`
+      `<strong>Nannying Income for Person 1:</strong> discountedNannyRate(${asAU(discountedNannyRate)}) * daysNannyingPerWeek(${daysNannyingPerWeek1}) * nannyHoursPerDay(${assumedNannyHoursPerDay}) * 52 weeks = ${asAU(nannyingIncome1)}`
     );
   }
   if (daysNannyingPerWeek2 > 0) {
     explanation.push(
-      `<strong>Nannying Income for Person 2:</strong> discountedNannyRate(${asAU(discountedNannyRate)}) * daysNannyingPerWeek(${daysNannyingPerWeek2}) *  * nannyHoursPerDay(${assumedNannyHoursPerDay}) = ${asAU(nannyingIncome2)}`
+      `<strong>Nannying Income for Person 2:</strong> discountedNannyRate(${asAU(discountedNannyRate)}) * daysNannyingPerWeek(${daysNannyingPerWeek2}) *  * nannyHoursPerDay(${assumedNannyHoursPerDay}) * 52 weeks = ${asAU(nannyingIncome2)}`
     );
   }
   explanation = explanation.concat([
-    `<strong>Total Income for Person 1:</strong> ${asAU(totalIncome1)}${daysNannyingPerWeek1 > 0 || daysOffPerWeek1 > 0 ? `(${daysOffPerWeek1 > 0 ? "Adjusted Income" : ""}${daysOffPerWeek1 > 0 ? "+ Nannying Income" : ""})` : ""}`,
-    `<strong>Total Income for Person 2:</strong> ${asAU(totalIncome2)}${daysNannyingPerWeek2 > 0 || daysOffPerWeek2 > 0 ? `(${daysOffPerWeek2 > 0 ? "Adjusted Income" : ""}${daysOffPerWeek2 > 0 ? "+ Nannying Income" : ""})` : ""}`,
+    `<strong>Total Income for Person 1:</strong> ${asAU(totalIncome1)}${daysNannyingPerWeek1 > 0 || daysOffPerWeek1 > 0 ? `(${daysOffPerWeek1 > 0 ? "Adjusted Income" : ""}${daysNannyingPerWeek1 > 0 ? " + Nannying Income" : ""})` : ""}`,
+    `<strong>Total Income for Person 2:</strong> ${asAU(totalIncome2)}${daysNannyingPerWeek2 > 0 || daysOffPerWeek2 > 0 ? `(${daysOffPerWeek2 > 0 ? "Adjusted Income" : ""}${daysNannyingPerWeek2 > 0 ? " + Nannying Income" : ""})` : ""}`,
     `<strong>Family Income:</strong> totalIncomePerson1(${asAU(totalIncome1)}) + totalIncomePerson2(${asAU(totalIncome2)}) = ${asAU(totalIncome1 + totalIncome2)}`,
     `<strong>Family Cost of childcare after CCS (adjusted based on family income, child care type and hours):</strong> ${asAU(familyCost)}`,
     `<strong>Total Take Home for Person 1 (Income After Tax):</strong> ${asAU(calculateTakeHomePay(totalIncome1))}`,
